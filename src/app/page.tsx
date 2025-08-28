@@ -6,19 +6,28 @@ import { Badge } from "@/components/ui/badge"
 import { TrendingUp, Users, DollarSign, Share2, PieChart, Star, Shield, Globe, AlertTriangle, BarChart3, LineChart, Target } from "lucide-react";
 import { useState } from "react";
 import Image from "next/image";
+import { supabase } from "@/lib/supabaseClient"
 
 export default function App() {
   const [email, setEmail] = useState("");
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const handleEmailSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (email) {
-      setIsSubmitted(true);
-      // In a real app, this would send to a backend
-      setTimeout(() => setIsSubmitted(false), 3000);
+  const handleEmailSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setError(null)
+
+    const { error } = await supabase.from("waitlist").insert([{ email }])
+
+    if (error) {
+      console.error("Supabase error:", error.message)
+      setError("Something went wrong. Please try again.")
+    } else {
+      setIsSubmitted(true)
+      setEmail("")
+      setTimeout(() => setIsSubmitted(false), 3000)
     }
-  };
+  }
 
   return (
     <div className="min-h-screen bg-white">
