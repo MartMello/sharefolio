@@ -27,7 +27,7 @@ export default function App() {
         <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <Image
-              src="/logo_abstract.png"
+              src="/Logo_abstract.png"
               alt="Sharefolio logo"
               width={100}
               height={100}
