@@ -283,7 +283,7 @@ export default function App() {
 
             <div className="flex justify-center space-x-8 text-sm text-gray-600">
               <a href="/privacy" className="hover:text-blue-700 transition-colors">Privacy Policy</a>
-              <a href="#" className="hover:text-blue-700 transition-colors">Terms of Service</a>
+              <a href="/terms" className="hover:text-blue-700 transition-colors">Terms of Service</a>
             </div>
           </div>
 
