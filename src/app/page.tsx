@@ -38,7 +38,11 @@ export default function App() {
 
     if (error) {
       console.error("Supabase error:", error.message);
-      setError("Something went wrong. Please try again.");
+      if (error.code === "23505") {
+        setError("This email is already on the waitlist.");
+      } else {
+        setError("Something went wrong. Please try again.");
+      }
     } else {
       setIsSubmitted(true);
       setEmail("");
