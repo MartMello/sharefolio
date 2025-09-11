@@ -65,40 +65,6 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-neutral-light">
-      {/* Header (always light) */}
-      <header className="sticky top-0 z-50 bg-white/95 border-b border-neutral-medium/30 backdrop-blur-sm">
-        <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Image
-              src="/Logo_abstract.png"
-              alt="Sharefolio logo"
-              width={40}
-              height={40}
-              className="rounded-lg"
-              priority
-            />
-            <span className="text-xl font-semibold text-primary">Sharefolio</span>
-          </div>
-
-          <div className="flex items-center gap-4">
-            {/* Explore button */}
-            <Link href="/explore">
-              <Button className="bg-white text-primary border hover:bg-neutral-light px-6 font-semibold">
-                Explore
-              </Button>
-            </Link>
-
-            {/* Sign In button */}
-            <Link href="/login">
-              <Button className={`bg-primary text-white hover:bg-primary/90 px-6 font-semibold ${primaryGlow}`}>
-                Sign In
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </header>
-
-      {/* HERO — bold gradient + white content */}
       <section className="py-24 px-4 bg-gradient-to-r from-accent to-teal-600 text-white">
         <div className="max-w-4xl mx-auto text-center">
           <Badge className="mb-6 bg-white/10 text-white border-white/20">
