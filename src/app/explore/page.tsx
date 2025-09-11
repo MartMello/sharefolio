@@ -31,9 +31,10 @@ export default function ExploreCreators() {
   useEffect(() => {
     const fetchCreators = async () => {
       const { data, error } = await supabase
-  .from("profiles")
-  .select("*")
-  .eq("role", "creator");
+        .from("profiles")
+        .select("*")
+        .eq("role", "creator")
+        .not("role", "is", null);
 
       if (error) {
         console.error("Error fetching creators:", error.message);
