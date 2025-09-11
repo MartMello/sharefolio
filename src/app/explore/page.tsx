@@ -11,8 +11,21 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
+// Define a type that matches your Supabase "profiles" table
+type CreatorProfile = {
+  id: string;
+  name: string;
+  bio?: string;
+  profile_pic?: string;
+  role?: "creator" | "follower";
+  subscription_price?: number;
+  ytd_return?: number;
+  follower_count?: number;
+  created_at?: string;
+};
+
 export default function ExploreCreators() {
-  const [creators, setCreators] = useState<any[]>([]);
+  const [creators, setCreators] = useState<CreatorProfile[]>([]);
 
   // Fetch creators from Supabase
   useEffect(() => {
@@ -21,7 +34,7 @@ export default function ExploreCreators() {
       if (error) {
         console.error("Error fetching creators:", error.message);
       } else {
-        setCreators(data || []);
+        setCreators(data as CreatorProfile[]); // safely cast to our type
       }
     };
     fetchCreators();
@@ -53,7 +66,9 @@ export default function ExploreCreators() {
                   <CardTitle className="text-lg text-primary">
                     {creator.name}
                   </CardTitle>
-                  <p className="text-sm text-neutral-medium">{creator.bio}</p>
+                  <p className="text-sm text-neutral-medium">
+                    {creator.bio || "No bio yet"}
+                  </p>
                 </div>
               </CardHeader>
 
@@ -62,7 +77,9 @@ export default function ExploreCreators() {
                   <span>
                     YTD Return:{" "}
                     <b className="text-primary">
-                      {creator.ytd_return ?? "+--%"}
+                      {creator.ytd_return !== undefined
+                        ? `${creator.ytd_return}%`
+                        : "--"}
                     </b>
                   </span>
                   <span>
