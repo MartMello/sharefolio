@@ -35,29 +35,33 @@ export default function Header() {
 
         {/* Navigation */}
         <nav className="flex items-center gap-4">
-          <Link href="/explore" className="bg-white text-primary border hover:bg-neutral-light px-6 font-semibold">
-            Explore
+          {/* Explore */}
+          <Link href="/explore">
+            <Button className="bg-white text-primary border hover:bg-neutral-light px-6 font-semibold">
+              Explore
+            </Button>
           </Link>
 
+          {/* My Portfolio (only if logged in) */}
           {user && (
-            <Link
-              href={`/portfolio/${user.id}`}
-              className="hover:text-primary"
-            >
-              My Portfolio
+            <Link href={`/portfolio/${user.id}`}>
+              <Button className="bg-white text-primary border hover:bg-neutral-light px-6 font-semibold">
+                My Portfolio
+              </Button>
             </Link>
           )}
 
+          {/* Login / Logout */}
           {!user ? (
             <Link href="/login">
-              <Button className="bg-primary text-white hover:bg-primary/90 px-6 font-semibold ${primaryGlow}">
+              <Button className="bg-primary text-white hover:bg-primary/90 px-6 font-semibold">
                 Login
               </Button>
             </Link>
           ) : (
             <Button
               onClick={() => supabase.auth.signOut()}
-              className="bg-neutral-light text-primary border px-4"
+              className="bg-neutral-light text-primary border px-6 font-semibold"
             >
               Logout
             </Button>
