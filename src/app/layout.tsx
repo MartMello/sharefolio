@@ -2,6 +2,7 @@ import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import "./globals.css"
 import { Analytics } from "@vercel/analytics/react"
+import Header from "@/components/ui/header" 
 
 // Use Inter as the main font
 const inter = Inter({
@@ -22,9 +23,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.variable} font-sans antialiased`}>
-        {children}
+        <Header />
+        <main>{children}</main>
         <Analytics />
       </body>
     </html>
   )
 }
+

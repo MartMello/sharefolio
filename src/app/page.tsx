@@ -6,6 +6,7 @@ import { supabase } from "@/lib/supabaseClient";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import Link from "next/link";
 import {
   Card,
   CardContent,
@@ -79,11 +80,21 @@ export default function App() {
             <span className="text-xl font-semibold text-primary">Sharefolio</span>
           </div>
 
-          <Button
-            className={`bg-primary text-white hover:bg-primary/90 px-6 font-semibold ${primaryGlow}`}
-          >
-            Sign In
-          </Button>
+          <div className="flex items-center gap-4">
+            {/* Explore button */}
+            <Link href="/explore">
+              <Button className="bg-white text-primary border hover:bg-neutral-light px-6 font-semibold">
+                Explore
+              </Button>
+            </Link>
+
+            {/* Sign In button */}
+            <Link href="/login">
+              <Button className={`bg-primary text-white hover:bg-primary/90 px-6 font-semibold ${primaryGlow}`}>
+                Sign In
+              </Button>
+            </Link>
+          </div>
         </div>
       </header>
 
@@ -287,7 +298,7 @@ export default function App() {
             Enter your email to get early access when Sharefolio launches.
           </p>
 
-        <form
+          <form
             onSubmit={handleEmailSubmit}
             className="max-w-md mx-auto flex gap-3"
           >
