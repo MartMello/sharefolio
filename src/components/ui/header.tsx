@@ -35,7 +35,7 @@ export default function Header() {
 
         {/* Navigation */}
         <nav className="flex items-center gap-4">
-          <Link href="/explore" className="hover:text-primary">
+          <Link href="/explore" className="bg-white text-primary border hover:bg-neutral-light px-6 font-semibold">
             Explore
           </Link>
 
@@ -50,7 +50,7 @@ export default function Header() {
 
           {!user ? (
             <Link href="/login">
-              <Button className="bg-primary text-white hover:bg-primary/90 px-4">
+              <Button className="bg-primary text-white hover:bg-primary/90 px-6 font-semibold ${primaryGlow}">
                 Login
               </Button>
             </Link>
