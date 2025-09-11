@@ -4,14 +4,16 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
 import { Button } from "@/components/ui/button";
+import type { User } from "@supabase/supabase-js";
 
 export default function Header() {
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<User | null>(null);
 
-  // Load current user + listen for auth changes
   useEffect(() => {
+    // Load current user
     supabase.auth.getUser().then(({ data }) => setUser(data.user));
 
+    // Listen for auth changes
     const { data: listener } = supabase.auth.onAuthStateChange(
       (_event, session) => {
         setUser(session?.user ?? null);
@@ -26,7 +28,7 @@ export default function Header() {
   return (
     <header className="sticky top-0 z-50 bg-white/95 border-b border-neutral-medium/30 backdrop-blur-sm">
       <div className="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
-        {/* Logo / Home link */}
+        {/* Logo / Home */}
         <Link href="/" className="flex items-center gap-2">
           <span className="text-xl font-semibold text-primary">Sharefolio</span>
         </Link>
