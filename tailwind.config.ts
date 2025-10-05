@@ -12,11 +12,12 @@ const config: Config = {
         sans: ["var(--font-inter)", "sans-serif"],
       },
       colors: {
-        primary: "#0F172A",   // Slate dark
-        accent: "#14B8A6",    // Teal
+        primary: "#005F73",   // Deep Blue
+        accent: "#0A9396",    // Seafoam Green
         neutral: {
-          light: "#F8FAFC",
-          medium: "#475569",
+          light: "#F0F2F5",  // Light Gray Background
+          medium: "#6B7280",  // Muted Text
+          dark: "#111827",   // Dark Text
         },
       },
     },
