@@ -20,10 +20,14 @@ export default function OnboardingPage() {
     const [goal, setGoal] = useState("");
     const router = useRouter();
 
-    const totalSteps = role ? 5 : 2;
+    const totalSteps = 5;
     const progressPercent = (step / totalSteps) * 100;
 
-    const handleNext = () => {
+    const handleNext = (e: React.FormEvent) => {
+        e.preventDefault();
+        if (step === 3 && !name.trim()) {
+            return; // Don't proceed if name is empty
+        }
         if (step < totalSteps) setStep(step + 1);
     };
 
@@ -94,14 +98,18 @@ export default function OnboardingPage() {
                         </h2>
                         <Button
                             onClick={() => setRole("creator")}
-                            className={`w-full py-3 ${role === "creator" ? "bg-primary text-white" : "bg-neutral-light"
+                            className={`w-full py-3 border ${role === "creator"
+                                ? "bg-primary text-white"
+                                : "bg-neutral-light text-primary hover:bg-primary hover:text-white"
                                 }`}
                         >
                             I’m a Creator — Share my portfolio & earn subscribers
                         </Button>
                         <Button
                             onClick={() => setRole("follower")}
-                            className={`w-full py-3 ${role === "follower" ? "bg-primary text-white" : "bg-neutral-light"
+                            className={`w-full py-3 border ${role === "follower"
+                                ? "bg-primary text-white"
+                                : "bg-neutral-light text-primary hover:bg-primary hover:text-white"
                                 }`}
                         >
                             I’m a Follower — Learn from creators & explore portfolios
@@ -118,6 +126,7 @@ export default function OnboardingPage() {
                             placeholder="Your name"
                             value={name}
                             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setName(e.target.value)}
+                            required
                         />
                     </div>
                 )}
@@ -131,17 +140,22 @@ export default function OnboardingPage() {
                             placeholder="Short bio (who you are as an investor)"
                             value={bio}
                             onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setBio(e.target.value)}
+                            required
                         />
                         <Input
                             placeholder="Investment style (growth, value, crypto, ...)"
                             value={style}
                             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setStyle(e.target.value)}
+                            required
                         />
                         <Input
                             type="number"
                             placeholder="Subscription price (€ / month)"
                             value={subscriptionPrice ?? ""}
                             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSubscriptionPrice(Number(e.target.value))}
+                            required
+                            min="0"
+                            step="0.01"
                         />
                     </div>
                 )}
@@ -200,7 +214,15 @@ export default function OnboardingPage() {
                         Back
                     </Button>
                     {step < totalSteps ? (
-                        <Button onClick={handleNext} className="bg-primary text-white">
+                        <Button
+                            onClick={handleNext}
+                            className="bg-primary text-white"
+                            disabled={
+                                (step === 2 && !role) || 
+                                (step === 3 && !name.trim()) ||
+                                (step === 4 && role === 'creator' && (!bio.trim() || !style.trim() || subscriptionPrice === null || subscriptionPrice < 0))
+                            }
+                        >
                             Next
                         </Button>
                     ) : (
