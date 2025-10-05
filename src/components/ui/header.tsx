@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image"; // Import the Image component
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
 import { Button } from "@/components/ui/button";
@@ -30,7 +31,8 @@ export default function Header() {
       <div className="max-w-6xl mx-auto px-4 py-3 flex justify-between items-center">
         {/* Logo / Home */}
         <Link href="/" className="flex items-center gap-2">
-          <span className="text-xl font-semibold text-primary">Sharefolio</span>
+          {/* Use the new logo */}
+          <Image src="/logo.svg" alt="Sharefolio Logo" width={150} height={36} priority />
         </Link>
 
         {/* Navigation */}
