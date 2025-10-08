@@ -1,0 +1,33 @@
+/* Tremor Styles */
+:root {
+  --tremor-background: white;
+  --tremor-foreground: #111827;
+  --tremor-content: #6B7280;
+  --tremor-border: #E5E7EB;
+  --tremor-ring: #E5E7EB;
+  --tremor-content-emphasis: #111827;
+  --tremor-background-muted: #F9FAFB;
+  --tremor-background-subtle: #F3F4F6;
+  --tremor-content-strong: #1F2937;
+  --tremor-content-subtle: #9CA3AF;
+}
+
+.dark {
+  --tremor-background: #111827;
+  --tremor-foreground: #F9FAFB;
+  --tremor-content: #9CA3AF;
+  --tremor-border: #374151;
+  --tremor-ring: #374151;
+  --tremor-content-emphasis: #F9FAFB;
+  --tremor-background-muted: #1F2937;
+  --tremor-background-subtle: #1F2937;
+  --tremor-content-strong: #F9FAFB;
+  --tremor-content-subtle: #6B7280;
+}
+
+/* Chart container styles */
+.chart-container {
+  width: 100%;
+  height: 100%;
+  min-height: 300px;
+}

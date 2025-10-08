@@ -4,7 +4,6 @@ import "./globals.css"
 import { Analytics } from "@vercel/analytics/react"
 import Header from "@/components/ui/header" 
 
-// Use Inter as the main font
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
@@ -30,4 +29,3 @@ export default function RootLayout({
     </html>
   )
 }
-
