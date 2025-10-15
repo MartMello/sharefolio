@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { PieChart, Pie, Cell, ResponsiveContainer, Sector } from 'recharts';
+import { PieChart, Pie, Cell, ResponsiveContainer, Sector, Tooltip } from 'recharts';
 
 // Types
 interface PortfolioItem {
@@ -30,6 +30,10 @@ interface ActiveShapeProps {
   startAngle: number;
   endAngle: number;
   fill: string;
+  payload: {
+    name: string;
+    percentage: string;
+  }
 }
 
 // Mock data - in real app, fetch from Supabase
@@ -44,10 +48,16 @@ const mockPortfolioData: PortfolioItem[] = [
 const COLORS = ['#0A9396', '#005F73', '#94D2BD', '#E9D8A6', '#EE9B00'];
 
 const renderActiveShape = (props: any) => {
-  const { cx, cy, innerRadius, outerRadius, startAngle, endAngle, fill } = props as ActiveShapeProps;
+  const { cx, cy, innerRadius, outerRadius, startAngle, endAngle, fill, payload } = props as ActiveShapeProps;
 
   return (
-    <g>
+    <g style={{ filter: 'drop-shadow(0px 4px 10px rgba(0,0,0,0.2))' }}>
+      <text x={cx} y={cy - 10} textAnchor="middle" fill={fill} className="text-lg font-bold">
+        {payload.name}
+      </text>
+      <text x={cx} y={cy + 10} textAnchor="middle" fill="#666" className="text-sm">
+        {payload.percentage}%
+      </text>
       <Sector
         cx={cx}
         cy={cy}
@@ -56,10 +66,36 @@ const renderActiveShape = (props: any) => {
         startAngle={startAngle}
         endAngle={endAngle}
         fill={fill}
+        stroke="#fff"
+        strokeWidth={2}
       />
     </g>
   );
 };
+
+const CustomTooltip = ({ active, payload }: any) => {
+  if (active && payload && payload.length) {
+    return (
+      <div className="bg-white p-4 rounded-lg shadow-lg border border-gray-200">
+        <p className="font-bold text-gray-800">{`${payload[0].name}`}</p>
+        <p className="text-gray-600">{`Value: ${formatCurrency(payload[0].value)}`}</p>
+        <p className="text-gray-600">{`Percentage: ${payload[0].payload.percentage}%`}</p>
+      </div>
+    );
+  }
+
+  return null;
+};
+
+const formatCurrency = (value: number) => {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(value);
+};
+
 
 export default function PortfolioPage() {
   const [selectedTickers, setSelectedTickers] = useState<SelectedTickersState>(
@@ -92,15 +128,6 @@ export default function PortfolioPage() {
     setActiveIndex(undefined);
   };
 
-  const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
-    }).format(value);
-  };
-
   const calculateGainLoss = (item: PortfolioItem) => {
     const cost = item.quantity * item.avgPrice;
     const current = item.value;
@@ -110,19 +137,19 @@ export default function PortfolioPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-4">
+    <div className="min-h-screen bg-gray-50 py-12 px-4 font-sans">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">My Portfolio</h1>
-          <p className="text-gray-600">Total Portfolio Value: <span className="text-2xl font-semibold text-teal-600">{formatCurrency(totalValue)}</span></p>
+        <div className="mb-10">
+          <h1 className="text-5xl font-bold text-gray-800 mb-2 tracking-tight">My Portfolio</h1>
+          <p className="text-gray-500 text-lg">Total Portfolio Value: <span className="text-3xl font-semibold text-teal-600 tracking-tight">{formatCurrency(totalValue)}</span></p>
         </div>
 
         {/* Main Content Grid */}
-        <div className="grid lg:grid-cols-2 gap-8">
+        <div className="grid lg:grid-cols-5 gap-8">
           {/* Pie Chart Section */}
-          <div className="bg-white rounded-xl shadow-lg p-6">
-            <h2 className="text-xl font-semibold text-gray-800 mb-4">Portfolio Allocation</h2>
+          <div className="lg:col-span-3 bg-white rounded-2xl shadow-lg p-8 border border-gray-100">
+            <h2 className="text-2xl font-semibold text-gray-800 mb-6 tracking-tight">Portfolio Allocation</h2>
             <div className="h-96 relative">
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
@@ -132,8 +159,8 @@ export default function PortfolioPage() {
                     data={chartData}
                     cx="50%"
                     cy="50%"
-                    innerRadius={80}
-                    outerRadius={140}
+                    innerRadius={90}
+                    outerRadius={150}
                     dataKey="value"
                     onMouseEnter={handlePieEnter}
                     onMouseLeave={handlePieLeave}
@@ -142,18 +169,19 @@ export default function PortfolioPage() {
                       <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                     ))}
                   </Pie>
+                  <Tooltip content={<CustomTooltip />} />
                 </PieChart>
               </ResponsiveContainer>
-              
+
               {/* Center content */}
-              {chartData.length > 0 && (
+              {chartData.length > 0 && activeIndex === undefined && (
                 <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                   <div className="text-center">
                     <div className="text-sm text-gray-500 mb-1">Total Value</div>
-                    <div className="text-2xl font-bold text-teal-600">
+                    <div className="text-3xl font-bold text-teal-600 tracking-tight">
                       {formatCurrency(chartData.reduce((sum, item) => sum + item.value, 0))}
                     </div>
-                    <div className="text-xs text-gray-400 mt-2">
+                    <div className="text-xs text-gray-400 mt-2 uppercase tracking-wider">
                       {chartData.length} {chartData.length === 1 ? 'Asset' : 'Assets'}
                     </div>
                   </div>
@@ -166,9 +194,9 @@ export default function PortfolioPage() {
           </div>
 
           {/* Legend with Checkboxes */}
-          <div className="bg-white rounded-xl shadow-lg p-6">
-            <h2 className="text-xl font-semibold text-gray-800 mb-4">Holdings</h2>
-            <div className="space-y-3">
+          <div className="lg:col-span-2 bg-white rounded-2xl shadow-lg p-8 border border-gray-100">
+            <h2 className="text-2xl font-semibold text-gray-800 mb-6 tracking-tight">Holdings</h2>
+            <div className="space-y-4">
               {mockPortfolioData.map((item, index) => {
                 const { gain, percentage } = calculateGainLoss(item);
                 const isPositive = gain >= 0;
@@ -177,10 +205,10 @@ export default function PortfolioPage() {
                 return (
                   <div
                     key={item.ticker}
-                    className={`flex items-start p-4 rounded-lg border-2 transition-all ${
+                    className={`flex items-start p-4 rounded-xl border-2 transition-all duration-300 ease-in-out ${
                       selectedTickers[item.ticker]
-                        ? 'border-teal-500 bg-teal-50'
-                        : 'border-gray-200 bg-gray-50 opacity-60'
+                        ? 'border-teal-500 bg-teal-50/50 shadow-sm'
+                        : 'border-gray-200 bg-gray-50 opacity-70 hover:opacity-100'
                     }`}
                   >
                     <input
@@ -188,28 +216,28 @@ export default function PortfolioPage() {
                       id={item.ticker}
                       checked={selectedTickers[item.ticker]}
                       onChange={() => handleCheckboxChange(item.ticker)}
-                      className="mt-1 h-5 w-5 rounded border-gray-300 text-teal-600 focus:ring-teal-500 cursor-pointer"
+                      className="mt-1 h-5 w-5 rounded-md border-gray-300 text-teal-600 focus:ring-2 focus:ring-teal-500 focus:ring-offset-2 cursor-pointer"
                     />
-                    <label htmlFor={item.ticker} className="ml-3 flex-1 cursor-pointer">
+                    <label htmlFor={item.ticker} className="ml-4 flex-1 cursor-pointer">
                       <div className="flex items-center justify-between mb-1">
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center gap-3">
                           <div
-                            className="w-4 h-4 rounded"
+                            className="w-3 h-3 rounded-full"
                             style={{ backgroundColor: color }}
                           />
-                          <span className="font-semibold text-gray-900">{item.ticker}</span>
+                          <span className="font-semibold text-gray-800 text-lg">{item.ticker}</span>
                         </div>
-                        <span className="font-semibold text-gray-900">{formatCurrency(item.value)}</span>
+                        <span className="font-semibold text-gray-800 text-lg">{formatCurrency(item.value)}</span>
                       </div>
                       <div className="text-sm text-gray-600 space-y-1">
                         <div className="flex justify-between">
                           <span>{item.quantity} shares @ {formatCurrency(item.currentPrice)}</span>
                           <span className={`font-medium ${isPositive ? 'text-green-600' : 'text-red-600'}`}>
-                            {isPositive ? '+' : ''}{formatCurrency(gain)} ({percentage}%)
+                            {isPositive ? '▲' : '▼'} {formatCurrency(gain)} ({percentage}%)
                           </span>
                         </div>
                         {selectedTickers[item.ticker] && chartData.length > 0 && (
-                          <div className="text-xs text-gray-500">
+                          <div className="text-xs text-gray-500 pt-1">
                             Portfolio allocation: {((item.value / totalValue) * 100).toFixed(1)}%
                           </div>
                         )}
@@ -223,22 +251,22 @@ export default function PortfolioPage() {
         </div>
 
         {/* Summary Cards */}
-        <div className="grid md:grid-cols-3 gap-6 mt-8">
-          <div className="bg-white rounded-xl shadow-lg p-6">
-            <h3 className="text-sm font-medium text-gray-600 mb-2">Total Invested</h3>
-            <p className="text-2xl font-bold text-gray-900">
+        <div className="grid md:grid-cols-3 gap-8 mt-10">
+          <div className="bg-white rounded-2xl shadow-lg p-8 border border-gray-100">
+            <h3 className="text-md font-medium text-gray-500 mb-2 tracking-wide">Total Invested</h3>
+            <p className="text-4xl font-bold text-gray-800 tracking-tight">
               {formatCurrency(mockPortfolioData.reduce((sum, item) => sum + (item.quantity * item.avgPrice), 0))}
             </p>
           </div>
-          <div className="bg-white rounded-xl shadow-lg p-6">
-            <h3 className="text-sm font-medium text-gray-600 mb-2">Current Value</h3>
-            <p className="text-2xl font-bold text-teal-600">
+          <div className="bg-white rounded-2xl shadow-lg p-8 border border-gray-100">
+            <h3 className="text-md font-medium text-gray-500 mb-2 tracking-wide">Current Value</h3>
+            <p className="text-4xl font-bold text-teal-600 tracking-tight">
               {formatCurrency(totalValue)}
             </p>
           </div>
-          <div className="bg-white rounded-xl shadow-lg p-6">
-            <h3 className="text-sm font-medium text-gray-600 mb-2">Total Gain/Loss</h3>
-            <p className={`text-2xl font-bold ${
+          <div className="bg-white rounded-2xl shadow-lg p-8 border border-gray-100">
+            <h3 className="text-md font-medium text-gray-500 mb-2 tracking-wide">Total Gain/Loss</h3>
+            <p className={`text-4xl font-bold tracking-tight ${
               totalValue - mockPortfolioData.reduce((sum, item) => sum + (item.quantity * item.avgPrice), 0) >= 0
                 ? 'text-green-600'
                 : 'text-red-600'
