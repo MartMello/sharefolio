@@ -16,7 +16,6 @@ import {
 import { Badge } from "@/components/ui/badge";
 
 import {
-  PieChart,
   AlertTriangle,
 } from "lucide-react";
 

@@ -7,7 +7,7 @@ declare module '@vercel/analytics' {
   interface AnalyticsProps {
     mode?: 'auto' | 'development' | 'production';
     debug?: boolean;
-    beforeSend?: (event: any) => any;
+    beforeSend?: (event: unknown) => unknown;
   }
   
   const Analytics: ComponentType<AnalyticsProps>;

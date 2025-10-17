@@ -22,20 +22,6 @@ interface SelectedTickersState {
   [ticker: string]: boolean;
 }
 
-interface ActiveShapeProps {
-  cx: number;
-  cy: number;
-  innerRadius: number;
-  outerRadius: number;
-  startAngle: number;
-  endAngle: number;
-  fill: string;
-  payload: {
-    name: string;
-    percentage: string;
-  }
-}
-
 // Mock data - in real app, fetch from Supabase
 const mockPortfolioData: PortfolioItem[] = [
   { ticker: 'AAPL', quantity: 50, avgPrice: 150, currentPrice: 175, value: 8750 },
@@ -47,8 +33,21 @@ const mockPortfolioData: PortfolioItem[] = [
 
 const COLORS = ['#0A9396', '#005F73', '#94D2BD', '#E9D8A6', '#EE9B00'];
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const renderActiveShape = (props: any) => {
-  const { cx, cy, innerRadius, outerRadius, startAngle, endAngle, fill, payload } = props;
+  const { cx, cy, innerRadius, outerRadius, startAngle, endAngle, fill, payload } = props as {
+    cx: number;
+    cy: number;
+    innerRadius: number;
+    outerRadius: number;
+    startAngle: number;
+    endAngle: number;
+    fill: string;
+    payload: {
+      name: string;
+      percentage: string;
+    };
+  };
 
   return (
     <g style={{ filter: 'drop-shadow(0px 4px 10px rgba(0,0,0,0.2))' }}>
