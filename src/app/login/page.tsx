@@ -37,22 +37,20 @@ export default function LoginPage() {
     e.preventDefault();
     setLoading(true);
     setError(null);
-  
+
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
     });
-  
+
     if (error) {
       setError(error.message);
     } else {
       alert("✅ Check your email to confirm your account!");
-      const userId = data.user?.id;
-      if (userId) {
-        window.location.href = `/portfolio/${userId}`;
-      }
+      // Redirect to the onboarding page after successful signup
+      window.location.href = '/onboarding';
     }
-  
+
     setLoading(false);
   };
 
