@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { PieChart, Pie, Cell, ResponsiveContainer, Sector, Tooltip } from 'recharts';
 
 // Types
@@ -48,7 +48,7 @@ const mockPortfolioData: PortfolioItem[] = [
 const COLORS = ['#0A9396', '#005F73', '#94D2BD', '#E9D8A6', '#EE9B00'];
 
 const renderActiveShape = (props: any) => {
-  const { cx, cy, innerRadius, outerRadius, startAngle, endAngle, fill, payload } = props as ActiveShapeProps;
+  const { cx, cy, innerRadius, outerRadius, startAngle, endAngle, fill, payload } = props;
 
   return (
     <g style={{ filter: 'drop-shadow(0px 4px 10px rgba(0,0,0,0.2))' }}>
@@ -73,7 +73,18 @@ const renderActiveShape = (props: any) => {
   );
 };
 
-const CustomTooltip = ({ active, payload }: any) => {
+interface TooltipProps {
+  active?: boolean;
+  payload?: {
+    name: string;
+    value: number;
+    payload: {
+      percentage: string;
+    };
+  }[];
+}
+
+const CustomTooltip = ({ active, payload }: TooltipProps) => {
   if (active && payload && payload.length) {
     return (
       <div className="bg-white p-4 rounded-lg shadow-lg border border-gray-200">
